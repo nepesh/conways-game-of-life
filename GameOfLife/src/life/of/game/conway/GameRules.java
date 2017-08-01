@@ -1,8 +1,5 @@
 package life.of.game.conway;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class GameRules{
 	
 	boolean[][] possibleFutureState = new boolean[10][10];
@@ -16,6 +13,7 @@ public class GameRules{
 	}
 	
     void countLiveCells(int[][] neighbour) {
+    	    liveCellCount = 0;
     	    int count = 0;
     	    do {
     	    	  if (getNeigbourCurrentState(neighbour[count][0],neighbour[count][1])) {
@@ -35,18 +33,19 @@ public class GameRules{
 	}
 	
 	boolean gameRuleTwoAndThree() {
-        if(liveCellCount>=2 && liveCellCount <=3) {
+        if(liveCellCount==2 || liveCellCount ==3) {
         	  return true;
         }
-		return true;
+		return false;
 
 	}
 	
 	boolean gameRuleFour() {
+	
         if(liveCellCount == 3) {
         	  return true;
         }
-		return true;
+		return false;
 
 	}
 	int[][] calculateNeighbour(int x, int y) {
@@ -84,6 +83,11 @@ public class GameRules{
 	boolean getNeigbourCurrentState(int x, int y) {
 
 		return currentStateList[x][y];
+
+	}
+	boolean getCellsCurrentState(int x, int y) {
+
+		return getNeigbourCurrentState(x, y);
 
 	}
 	
