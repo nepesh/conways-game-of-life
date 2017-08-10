@@ -2,8 +2,8 @@ package life.of.game.conway;
 
 public class GameRules{
 	
-	boolean[][] possibleFutureState = new boolean[10][10];
-	boolean[][] currentStateList = new boolean[10][10];
+	boolean[][] possibleFutureState ;
+	boolean[][] currentStateList ;
 	int[][] neighbour = new int[8][2];
 	int liveCellCount = 0;
 	
@@ -11,7 +11,12 @@ public class GameRules{
 		
 		super();
 	}
-	
+	void setCurrentStateListSize(int x, int y) {
+		currentStateList = new boolean[x][y];
+	}
+	void setpossibleFutureStateListSize(int x, int y) {
+		possibleFutureState = new boolean[x][y];
+	}
     void countLiveCells(int[][] neighbour) {
     	    liveCellCount = 0;
     	    int count = 0;
@@ -48,7 +53,7 @@ public class GameRules{
 		return false;
 
 	}
-	int[][] calculateNeighbour(int x, int y) {
+	int[][] calculateNeighbour(int x, int y, int xcellsize, int ycellsize) {
 		int[][] neighbours = new int[8][2]; 
 		int countx = 0;
 		
@@ -56,15 +61,15 @@ public class GameRules{
 			for(int neighboury = y-1; neighboury <= y + 1; neighboury++) {
 				if(neighbourx != x || neighboury != y) {
 					if(neighbourx<0) {
-						neighbours[countx][0] = 9;	
-					}else if(neighbourx>9){
+						neighbours[countx][0] = xcellsize;	
+					}else if(neighbourx>xcellsize-1){
 						neighbours[countx][0] = 0;	
 					}else {
 						neighbours[countx][0] = neighbourx;	
 					}
 					if(neighboury<0) {
-						neighbours[countx][1] = 9;
-					}else if(neighboury>9){
+						neighbours[countx][1] = ycellsize;
+					}else if(neighboury>ycellsize-1){
 						neighbours[countx][1] = 0;
 					}else {
 						neighbours[countx][1] = neighboury;	
