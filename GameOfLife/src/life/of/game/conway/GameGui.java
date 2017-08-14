@@ -20,8 +20,6 @@ public class GameGui extends JPanel {
 	public void setState(boolean[][] newGrid) {
 		gridState = newGrid;
 	}
-	
-	
 
 	@Override
 	public void paintComponent(Graphics cell) {
@@ -29,17 +27,15 @@ public class GameGui extends JPanel {
 
 		int cellWidth = this.getWidth() / gridState.length;
 		int cellHeight = this.getHeight() / gridState[0].length;
-		
+
 		for (int i = 0; i < gridState.length; i++) {
 			for (int j = 0; j < gridState[0].length; j++) {
 				if (gridState[i][j] == true) {
 					cell.setColor(Color.green);
-					cell.fillRect((int) (i * cellWidth), (int) (j * cellHeight), (int) (cellWidth),
-							(int) (cellHeight));
-				}else {
+					cell.fillRect((int) (i * cellWidth), (int) (j * cellHeight), (int) (cellWidth), (int) (cellHeight));
+				} else {
 					cell.setColor(Color.white);
-					cell.fillRect((int) (i * cellWidth), (int) (j * cellHeight), (int) (cellWidth),
-							(int) (cellHeight));
+					cell.fillRect((int) (i * cellWidth), (int) (j * cellHeight), (int) (cellWidth), (int) (cellHeight));
 				}
 			}
 		}
