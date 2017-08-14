@@ -5,6 +5,10 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.Array;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -24,13 +28,16 @@ public class MainController extends JFrame implements ActionListener {
 	JButton Next = new JButton("Start");
 	JButton Set = new JButton("Set");
 	JButton Stop = new JButton("Stop");
+	JButton Reset = new JButton("Reset");
 	JLabel xlabel = new JLabel("X");
 	JLabel ylabel = new JLabel("Y");
+	JLabel Count = new JLabel();
 	JTextField xcoord = new JTextField();
 	JTextField ycoord = new JTextField();
 	int xcoordinate = 10;
 	int ycoordinate = 10;
 	Timer gameStart;
+	int gameCount = 0;
 	GameGui panel;
 
 	Container buttonContainer = new Container();
@@ -38,7 +45,8 @@ public class MainController extends JFrame implements ActionListener {
 	public MainController() {
 		currentState = new boolean[xcoordinate][ycoordinate];
 		Random randomGenerator = new Random();
-		for (int idx = 1; idx <= 20; ++idx) {
+		int totalRandom = (xcoordinate * ycoordinate) / 2;
+		for (int idx = 1; idx <= totalRandom; ++idx) {
 			int randomIntx = randomGenerator.nextInt(xcoordinate);
 			int randomInty = randomGenerator.nextInt(ycoordinate);
 			currentState[randomIntx][randomInty] = true;
@@ -47,14 +55,16 @@ public class MainController extends JFrame implements ActionListener {
 		frame.setSize(600, 660);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
-		buttonContainer.setLayout(new GridLayout(1, 7));
+		buttonContainer.setLayout(new GridLayout(1, 9));
 		buttonContainer.add(Next);
 		buttonContainer.add(Stop);
+		buttonContainer.add(Reset);
 		buttonContainer.add(xlabel);
 		buttonContainer.add(xcoord);
 		buttonContainer.add(ylabel);
 		buttonContainer.add(ycoord);
 		buttonContainer.add(Set);
+		buttonContainer.add(Count);
 		frame.add(buttonContainer, BorderLayout.NORTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Next.addActionListener(new ActionListener() {
@@ -71,18 +81,35 @@ public class MainController extends JFrame implements ActionListener {
 
 			}
 		});
+		Reset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				Random randomGenerator = new Random();
+				int totalRandom = (xcoordinate * ycoordinate) / 2;
+				for (int idx = 1; idx <= totalRandom; ++idx) {
+					int randomIntx = randomGenerator.nextInt(xcoordinate);
+					int randomInty = randomGenerator.nextInt(ycoordinate);
+					currentState[randomIntx][randomInty] = true;
+				}
+				gameCount = 0;
+				panel.setState(currentState);
+				frame.repaint();
+			}
+		});
 		Set.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
 				xcoordinate = Integer.parseInt(xcoord.getText());
 				ycoordinate = Integer.parseInt(ycoord.getText());
+				int totalRandom = (xcoordinate * ycoordinate) / 2;
 				currentState = new boolean[xcoordinate][ycoordinate];
 				Random randomGenerator = new Random();
-				for (int idx = 1; idx <= 20; ++idx) {
+				for (int idx = 1; idx <= totalRandom; ++idx) {
 					int randomIntx = randomGenerator.nextInt(xcoordinate);
 					int randomInty = randomGenerator.nextInt(ycoordinate);
 					currentState[randomIntx][randomInty] = true;
 				}
+				gameCount = 0;
 				panel.setState(currentState);
 				frame.repaint();
 			}
@@ -103,11 +130,15 @@ public class MainController extends JFrame implements ActionListener {
 
 	void simulateGame() {
 		int timerDelay = 500;
+
 		gameStart = new Timer(timerDelay, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawFrame();
 				panel.setState(currentState);
 				frame.repaint();
+				gameCount++;
+				Count.setText(Integer.toString(gameCount));
+				
 			}
 		});
 		gameStart.start();
