@@ -5,10 +5,6 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.Array;
-import java.util.Arrays;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -39,7 +35,7 @@ public class MainController extends JFrame implements ActionListener {
 	Timer gameStart;
 	int gameCount = 0;
 	GameGui panel;
-
+	GameSetup mouseMovement;
 	Container buttonContainer = new Container();
 
 	public MainController() {
@@ -52,6 +48,10 @@ public class MainController extends JFrame implements ActionListener {
 			currentState[randomIntx][randomInty] = true;
 		}
 		panel = new GameGui(currentState);
+		mouseMovement = new GameSetup(panel);
+		panel.addMouseListener(mouseMovement);
+		panel.addMouseMotionListener(mouseMovement);
+
 		frame.setSize(600, 660);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
@@ -138,7 +138,7 @@ public class MainController extends JFrame implements ActionListener {
 				frame.repaint();
 				gameCount++;
 				Count.setText(Integer.toString(gameCount));
-				
+
 			}
 		});
 		gameStart.start();
@@ -155,19 +155,7 @@ public class MainController extends JFrame implements ActionListener {
 				neighbourList = game.calculateNeighbour(x, y, xcoordinate - 1, ycoordinate - 1);
 				game.countLiveCells(neighbourList);
 
-				if (game.getCellsCurrentState(x, y)) {
-					if (game.gameRuleOne() && game.gameRuleTwoAndThree()) {
-						game.setPossibleFutureState(x, y, true);
-					} else {
-						game.setPossibleFutureState(x, y, false);
-					}
-				} else {
-					if (game.gameRuleFour()) {
-						game.setPossibleFutureState(x, y, true);
-					} else {
-						game.setPossibleFutureState(x, y, false);
-					}
-				}
+				game.calculateFutureCellState(game, x, y);
 			}
 		}
 

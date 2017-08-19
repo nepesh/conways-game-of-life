@@ -111,10 +111,30 @@ public class GameRules {
 		return possibleFutureState;
 
 	}
+	boolean getPossibleFutureState(int x, int y) {
 
+		return possibleFutureState[x][y];
+
+	}
 	void setCurrentStateList(boolean[][] currentState) {
 
 		currentStateList = currentState;
 
+	}
+	
+	void calculateFutureCellState(GameRules game, int x, int y) {
+		if (game.getCellsCurrentState(x, y)) {
+			if (game.gameRuleOne() && game.gameRuleTwoAndThree()) {
+				game.setPossibleFutureState(x, y, true);
+			} else {
+				game.setPossibleFutureState(x, y, false);
+			}
+		} else {
+			if (game.gameRuleFour()) {
+				game.setPossibleFutureState(x, y, true);
+			} else {
+				game.setPossibleFutureState(x, y, false);
+			}
+		}
 	}
 }
