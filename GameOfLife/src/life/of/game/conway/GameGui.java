@@ -13,12 +13,14 @@ public class GameGui extends JPanel {
 	private static final long serialVersionUID = -8819817510943091336L;
 	
 	boolean[][] gridState;
+	String[][] gridcoord;
 	int cellWidth, cellHeight;
 	Graphics publicCell;
 
 	public GameGui(boolean[][] newGrid) {
 
 		gridState = newGrid;
+		
 	}
 
 	public void setState(boolean[][] newGrid) {
@@ -32,10 +34,21 @@ public class GameGui extends JPanel {
 	public int getCellHeight() {
 		return this.cellHeight;
 	}
+	
+	public String[][] getXYCoord() {
+		return gridcoord;
+		
+	}
 
 	public void paintCell(Graphics cell, int i, int j) {
-
-		cell.fillRect((int) (i * cellWidth), (int) (j * cellHeight), (int) (cellWidth), (int) (cellHeight));
+        int initialx = (int) (i * cellWidth);
+        int finalx = initialx + (int) (cellWidth);
+        int initialy = (int) (j * cellHeight);
+        int finaly = initialy+ (int) (cellHeight);
+        
+		cell.fillRect(initialx,initialy ,finalx , finaly);
+		gridcoord[i][j]= initialx+","+finalx+","+initialy+","+finaly;
+		System.out.println(gridcoord[i][j]);
 	}
 
 	@Override
@@ -44,7 +57,8 @@ public class GameGui extends JPanel {
 		
 		cellWidth = this.getWidth() / gridState.length;
 		cellHeight = this.getHeight() / gridState[0].length;
-
+        gridcoord = new String[gridState.length][gridState[0].length];
+		//fill the grid with colour
 		for (int i = 0; i < gridState.length; i++) {
 			for (int j = 0; j < gridState[0].length; j++) {
 				if (gridState[i][j] == true) {
@@ -56,6 +70,8 @@ public class GameGui extends JPanel {
 				}
 			}
 		}
+		
+		//draw the Grid Lines
 		for (int i = 0; i < gridState.length + 1; i++) {
 
 			cell.setColor(new Color(0, 0, 0));

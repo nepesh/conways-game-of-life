@@ -19,6 +19,12 @@ public class GameRules {
 	void setpossibleFutureStateListSize(int x, int y) {
 		possibleFutureState = new boolean[x][y];
 	}
+	
+	void setCurrentState(int x, int y, boolean state){
+		
+	    this.currentStateList[x][y] = state;
+		
+	}
 
 	void countLiveCells(int[][] neighbour) {
 		liveCellCount = 0;
