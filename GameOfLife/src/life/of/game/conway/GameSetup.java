@@ -47,17 +47,12 @@ public class GameSetup implements MouseListener, MouseMotionListener {
 	
 	public void mousePressed(MouseEvent e) {
 		String[][] actualCoord;
-		int width = gamegui.getCellWidth();
-		int height = gamegui.getCellHeight();
+		int width = gamegui.getWidth()/gamegui.gridState.length;
+		int height = gamegui.getHeight()/gamegui.gridState[0].length;
 		int x = MouseInfo.getPointerInfo().getLocation().x;
 		int y =  MouseInfo.getPointerInfo().getLocation().y;
 		int xcoord = 0 ;
 		int ycoord =0;
-		
-		
-		System.out.println("(" +x+ ", "+(y-40)+ ")");
-		System.out.println("(" +width+ ", "+height + ")");
-		
 		
 		actualCoord = gamegui.getXYCoord();
 		String[] xy;
@@ -68,14 +63,12 @@ public class GameSetup implements MouseListener, MouseMotionListener {
 				if ( x >=Integer.valueOf(xy[0]) && x <=Integer.valueOf(xy[1]) ) {
 					xcoord = Integer.valueOf(xy[0])/width;
 				}
-				if ( y-40>=Integer.valueOf(xy[2]) && y-40<=Integer.valueOf(xy[3])) {
-					System.out.println(xy[2]);
+				if ( y-80>=Integer.valueOf(xy[2]) && y-80<=Integer.valueOf(xy[3])) {
 					
 					ycoord = Integer.valueOf(xy[2])/height;
 				}
 			}
 		}
-		System.out.println("(gridx - " + xcoord + ", gridy - "+ycoord + ")" );
 		gamerules.setCurrentState(xcoord, ycoord, true);
 		setState(xcoord, ycoord, true);
 		Graphics graphic = e.getComponent().getGraphics();
@@ -105,17 +98,12 @@ public class GameSetup implements MouseListener, MouseMotionListener {
 	public void mouseDragged(MouseEvent e) {
         
 		String[][] actualCoord;
-		int width = gamegui.getCellWidth();
-		int height = gamegui.getCellHeight();
+		int width = gamegui.getWidth()/gamegui.gridState.length;
+		int height = gamegui.getHeight()/gamegui.gridState[0].length;
 		int x = MouseInfo.getPointerInfo().getLocation().x;
 		int y =  MouseInfo.getPointerInfo().getLocation().y;
-		int xcoord = (int) Math.floor(x/width);
-		int ycoord = (int) Math.ceil(y/height)- (gridheight/10);
-		
-		
-		System.out.println("(" +x+ ", "+y + ")");
-		System.out.println("(" +width+ ", "+height + ")");
-		System.out.println("(gridx - " + xcoord + ", gridy - "+ycoord + ")" );
+		int xcoord = 0;
+		int ycoord = 0;
 		
 		actualCoord = gamegui.getXYCoord();
 		String[] xy;
@@ -123,11 +111,12 @@ public class GameSetup implements MouseListener, MouseMotionListener {
 			for (int j = 0; j < gamegui.gridState[0].length; j++) {
 				xy = actualCoord[i][j].split(",");
 				
-				if (Integer.valueOf(xy[0]) >= x && Integer.valueOf(xy[1]) <= x ) {
-					xcoord = Integer.valueOf(xy[0]);
+				if ( x >=Integer.valueOf(xy[0]) && x <=Integer.valueOf(xy[1]) ) {
+					xcoord = Integer.valueOf(xy[0])/width;
 				}
-				if (Integer.valueOf(xy[2]) >= y && Integer.valueOf(xy[3]) <= y ) {
-					ycoord = Integer.valueOf(xy[2]);
+				if ( y-80>=Integer.valueOf(xy[2]) && y-80<=Integer.valueOf(xy[3])) {
+					
+					ycoord = Integer.valueOf(xy[2])/height;
 				}
 			}
 		}

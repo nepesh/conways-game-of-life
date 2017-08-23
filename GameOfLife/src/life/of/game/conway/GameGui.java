@@ -47,8 +47,9 @@ public class GameGui extends JPanel {
         int finaly = initialy+ (int) (cellHeight);
         
 		cell.fillRect(initialx,initialy ,finalx , finaly);
+		//set the XY coordinates of the grid which is referred to by the mouse controller
+		//class 
 		gridcoord[i][j]= initialx+","+finalx+","+initialy+","+finaly;
-		System.out.println(gridcoord[i][j]);
 	}
 
 	@Override
@@ -58,6 +59,7 @@ public class GameGui extends JPanel {
 		cellWidth = this.getWidth() / gridState.length;
 		cellHeight = this.getHeight() / gridState[0].length;
         gridcoord = new String[gridState.length][gridState[0].length];
+        
 		//fill the grid with colour
 		for (int i = 0; i < gridState.length; i++) {
 			for (int j = 0; j < gridState[0].length; j++) {

@@ -2,7 +2,8 @@ package life.of.game.conway;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.GridLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
@@ -15,7 +16,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -37,18 +40,24 @@ public class MainController extends JFrame {
 	JButton ScreenShot = new JButton("ScreenShot");
 
 	// Labels
-	JLabel xlabel = new JLabel("X");
-	JLabel ylabel = new JLabel("Y");
+	JLabel xlabel = new JLabel("X", SwingConstants.RIGHT);
+	JLabel ylabel = new JLabel("Y", SwingConstants.RIGHT);
+	JLabel description = new JLabel("Please enter Grid Size:");
+	JLabel countLabel = new JLabel("Step Counter:");
+	
+	
 	JLabel Count = new JLabel();
 	JTextField xcoord = new JTextField();
 	JTextField ycoord = new JTextField();
 	int xcoordinate = 10;
 	int ycoordinate = 10;
+	int screenshotcount=1;
 	Timer gameStart;
 	int gameCount = 0;
 	GameGui panel;
 	GameSetup mouseMovement;
 	Container buttonContainer = new Container();
+	Container topContainer = new Container();
 
 	public MainController() {
 		currentState = new boolean[xcoordinate][ycoordinate];
@@ -60,6 +69,8 @@ public class MainController extends JFrame {
 		mouseMovement = new GameSetup(panel);
 		panel.addMouseListener(mouseMovement);
 		panel.addMouseMotionListener(mouseMovement);
+		
+		//Initial State of the Game
 		game = new GameRules();
 		game.setCurrentStateListSize(xcoordinate, ycoordinate);
 		game.setpossibleFutureStateListSize(xcoordinate, ycoordinate);
@@ -73,6 +84,8 @@ public class MainController extends JFrame {
 				{ false, false, false, false, false, false, false, false, false, false },
 				{ false, false, false, false, false, false, false, false, false, false },
 				{ false, false, false, false, false, false, false, false, false, false } };
+				
+				
 		game.setCurrentStateList(currentState);
 		mouseMovement.setGameRules(game);
 		mouseMovement.setDrawnStates(xcoordinate, ycoordinate);
@@ -80,31 +93,52 @@ public class MainController extends JFrame {
 		frame.setSize(600, 600);
 		frame.setLayout(new BorderLayout());
 		frame.add(panel, BorderLayout.CENTER);
-		buttonContainer.setLayout(new GridLayout(1, 12));
+		
+		//Set Layouts
+		buttonContainer.setLayout(new FlowLayout());
+		topContainer.setLayout(new FlowLayout());
+		
+		//Setup Bottom COntainer
 		buttonContainer.add(Next);
 		buttonContainer.add(Stop);
 		buttonContainer.add(Reset);
 		buttonContainer.add(Step);
 		buttonContainer.add(Clear);
-		buttonContainer.add(xlabel);
-		buttonContainer.add(xcoord);
-		buttonContainer.add(ylabel);
-		buttonContainer.add(ycoord);
-		buttonContainer.add(Set);
-		buttonContainer.add(Count);
 		buttonContainer.add(ScreenShot);
+		
+		//setup Top Container
+		xlabel.setPreferredSize(new Dimension(20,20));
+		ylabel.setPreferredSize(new Dimension(20,20));
+		xcoord.setPreferredSize(new Dimension(80,20));
+		ycoord.setPreferredSize(new Dimension(80,20));
+		topContainer.add(description);
+		topContainer.add(xlabel);
+		topContainer.add(xcoord);
+		topContainer.add(ylabel);
+		topContainer.add(ycoord);
+		topContainer.add(Set);
+		topContainer.add(countLabel);
+		Count.setPreferredSize(new Dimension(40,20));
+		topContainer.add(Count);
+		
+
 		frame.add(buttonContainer, BorderLayout.SOUTH);
+		frame.add(topContainer, BorderLayout.NORTH);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		//Action Listeners for all BUttons
+		
+		//Take Screenshot
 		ScreenShot.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-			 
+				       
 				       BufferedImage bufImg = new BufferedImage(panel.getSize().width, panel.getSize().height,BufferedImage.TYPE_INT_RGB);  
 				       panel.paint(bufImg.createGraphics());  
-				       File imageFile = new File("images/hello.jpeg");  
+				       File imageFile = new File("images/Game_"+screenshotcount+".jpeg");  
+				       screenshotcount++;
 				    
 				        try {
 							imageFile.createNewFile();
@@ -118,6 +152,8 @@ public class MainController extends JFrame {
 				 
 			}
 		});
+		
+		//Perform Step by Step Iteration of the Game
 		Step.addActionListener(new ActionListener() {
 
 			@Override
@@ -246,7 +282,8 @@ public class MainController extends JFrame {
 
 	void simulateGame() {
 		int timerDelay = 500;
-
+		
+		//Start a Swing Timer Thread
 		gameStart = new Timer(timerDelay, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				drawFrame();
@@ -260,8 +297,10 @@ public class MainController extends JFrame {
 		gameStart.start();
 	}
 
+	//Check if the Game has reached a stable state
 	void checkStable() {
-		if (Arrays.equals(currentState, lastState)) {
+		if (Arrays.deepEquals(currentState, lastState)) {
+			JOptionPane.showMessageDialog(frame, "The Game Has reached a Stable State in "+gameCount+" steps.");
 			gameStart.stop();
 		}
 	}
@@ -271,8 +310,9 @@ public class MainController extends JFrame {
 		mouseMovement.setGameRules(game);
 		game.setCurrentStateListSize(xcoordinate, ycoordinate);
 		game.setpossibleFutureStateListSize(xcoordinate, ycoordinate);
+		
+		//check if the mouse has drawn new states
 		if (mouseMovement.start) {
-			// currentState = mouseMovement.getStates();
 			for (int x = 0; x < xcoordinate; x++) {
 				for (int y = 0; y < ycoordinate; y++) {
 					if (mouseMovement.getStateValue(x, y)) {
